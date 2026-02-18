@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Think Ummah</title>
+    <!-- Include the Tailwind CSS CDN for simplicity -->
+    <link href="../static/css/output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-md">
+        <!-- Login Card Container -->
+        <div class="bg-white shadow-lg rounded-lg p-6 md:p-8">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 text-center">Sign Up New Account</h2>
+            </div>
+            
+            <form action="/registar/api/register" method="POST">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="{{ form.email.id_for_label }}" class="block text-gray-700 text-sm font-semibold mb-2">Email Address</label>
+                    <input type="email" id="{{ form.email.id_for_label }}" name="{{ form.email.html_name }}" placeholder="you@example.com" required
+                           class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
+                    {{ form.email.errors }}
+                </div>
+
+                <div class="mb-6">
+                    <label for="{{ form.password.id_for_label }}" class="block text-gray-700 text-sm font-semibold mb-2">Create Password</label>
+                    <input type="password" id="{{ form.password.id_for_label }}" name="{{ form.password.html_name }}" placeholder="••••••••" required
+                           class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
+                </div>
+
+                <div class="mb-6">
+                    <label for="{{ form.repassword.id_for_label }}" class="block text-gray-700 text-sm font-semibold mb-2"> Re-enter Password</label>
+                    <input type="password" id="{{ form.repassword.id_for_label }}" name="{{ form.repassword.html_name }}" placeholder="••••••••" required
+                           class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
+                    
+                </div>
+
+                <button type="submit"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                    Sign Up
+                </button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
+

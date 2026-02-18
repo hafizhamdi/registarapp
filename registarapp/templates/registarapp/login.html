@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Think Ummah</title>
+    <!-- Include the Tailwind CSS CDN for simplicity -->
+    <link href="../static/css/output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-md">
+        <!-- Login Card Container -->
+        <div class="bg-white shadow-lg rounded-lg p-6 md:p-8">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 text-center">Sign In to Your Account</h2>
+            </div>
+            
+            <form id="loginForm" method="POST">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700 text-sm font-semibold mb-2">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required
+                           class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
+                    {{ form.email.errors }}
+                </div>
+
+                <div class="mb-6">
+                    <label for="password" class="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required
+                           class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
+                    <div class="mt-2 text-right">
+                        <a href="{% url 'forgot_password' %}" class="text-sm text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                    </div>
+                    {{ form.password.errors }}
+                </div>  
+
+                <button type="submit"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600">
+                    Don't have an account?
+                    <a href="{% url 'sign_up' %}"class="text-indigo-600 hover:text-indigo-500 font-semibold">Sign up</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Stop page refresh
+
+            // Grab values from your Django form inputs
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            try {
+                const response = await fetch('/auth/jwt/create/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // SUCCESS: Store tokens in [LocalStorage](https://developer.mozilla.org)
+                    localStorage.setItem('accessToken', data.access);
+                    localStorage.setItem('refreshToken', data.refresh);
+                    
+                    window.location.href = '/registar/dashboard'; // Redirect on success
+                } else {
+                    // FAILURE: Show error message
+                    alert(data.detail || "Invalid Email or Password");
+                }
+            } catch (err) {
+                console.error("Login Error:", err);
+                alert("Connection to server failed.");
+            }
+        });
+    </script>
+
+</body>
+</html>
+

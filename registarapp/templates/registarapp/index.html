@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Think Ummah</title>
+    <link href="../static/css/output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <script>
+        // Check if the user is logged in   
+        const token = localStorage.getItem('accessToken');
+        console.log("token:" + token);
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (!token) {
+            // No token? Send them back to login
+            // window.location.href = '/registar';
+            console.log("user logged out");
+            // USER IS LOGGED OUT
+            if (logoutBtn) logoutBtn.classList.add('hidden');
+        } else {
+            // USER IS LOGGED IN
+            if (logoutBtn) logoutBtn.classList.remove('hidden');
+            console.log("user logged in");
+        } 
+    </script>
+    <!-- Header / Navbar with Breadcrumb -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <img class="size-12 shrink-0" src="../static/img/teslaicon.png" alt="ChitChat Logo" />
+            <div class="flex items-center text-sm text-gray-600">
+                <a href="#" class="hover:text-blue-600">Home</a>
+                <span class="mx-2 text-gray-400">/</span>
+                <span class="font-medium text-gray-900">Dashboard</span>
+            </div>
+            <div class="flex items-center">
+                <button id="logoutBtn" class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm hover:bg-blue-700">Log out</button>
+                <span class="mx-2"></span>
+                <a class="hidden" href="{% url 'login' %}">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Big Header with Photo Background -->
+    <div class="relative bg-cover bg-center h-96 flex items-center justify-center" style="background-image: url('../static/img/main_background.jpg');">
+        <!-- Overlay for better text readability -->
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        
+        <div class="relative z-10 text-center text-white p-6">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-4">Welcome to Think Ummah</h1>
+            <p class=" text-xl md:text-2xl mb-8">Discover Registar, a solution purposefully designed to streamline student registration and enrich the academic experience.</p>
+            <a href="#" class="bg-white text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-gray-200">Get Started</a>
+        </div>
+    </div>
+
+    <!-- Content Area -->
+    <main class="max-w-7xl mx-auto px-6 py-12">
+      <h2 class="text-3xl font-bold mb-6">Institutions</h2>
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+          <ul>
+              <!-- Use Django's URL tag and a proper anchor for accessibility -->
+              <li class="p-4 hover:bg-blue-50">
+                  <a href="{% url 'login' %}" class="block w-full cursor-pointer">
+                      Madrasah Sri Petaling
+                  </a>
+              </li>
+              <li class="p-4">Maahad Tahfiz Nujw Sri Petaling</li>
+          </ul>
+      </div>
+    </main>
+
+    <!-- Content Area -->
+    <main class="max-w-7xl mx-auto px-6 py-12">
+      <h2 class="text-3xl font-bold mb-6">Latest Updates</h2>
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+          <p>Registar app was succesfully Live!</p>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 mt-12">
+        <div class="max-w-7xl mx-auto px-6 py-8 text-center">
+            <p>&copy; 2026 All Rights Reserved.</p>
+            <p class="text-sm mt-2">Powered by ThinkUmmah</p>
+        </div>
+    </footer>
+    <script>
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            // 1. Remove the tokens from storage
+            localStorage.removeItem('accessToken');
+            localStorage.setItem('refreshToken', null); // Or removeItem
+
+            // 2. Optional: Notify the backend (if using Djoser's Token logout)
+            // Note: For JWT, this is usually handled purely on the frontend.
+            // e.currentTarget.classList.add("hidden");
+
+            alert("You have been logged out.");
+
+            // 3. Redirect to the login page
+            window.location.href = '/registar/'; 
+            
+        });
+    </script>
+</body>
+</html>

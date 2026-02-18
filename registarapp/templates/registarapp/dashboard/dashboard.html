@@ -1,0 +1,13 @@
+{% extends "registarapp/main.html" %}
+
+{% block title %}Dashboard | School Portal{% endblock %}
+
+{% block content %}
+<h2 class="text-3xl font-semibold text-gray-800">Dashboard Overview</h2>
+<div class="grid gap-6 mt-6 md:grid-cols-2 lg:grid-cols-4">
+    <div class="rounded-xl bg-white p-6 shadow-sm border border-gray-200">
+        <p class="text-xs text-gray-500 uppercase font-bold">Total Students</p>
+        <p class="text-2xl font-bold">{{ total_students }}</p>
+    </div>
+</div>
+{% endblock %}
