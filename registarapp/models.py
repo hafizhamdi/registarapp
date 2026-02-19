@@ -10,6 +10,7 @@ class Student(models.Model):
     id_type = models.CharField(max_length=10) # PASSPORT or MYKAD or MYKID
     dob = models.DateField(max_length=12) # YYYY-MM-DD
     age = models.IntegerField(default=0)
+    gender = models.CharField(max_length=10, default="")
     address_line1 = models.CharField(max_length=200)
     address_line2 = models.CharField(max_length=200)
     postcode = models.CharField(max_length=10)
@@ -17,6 +18,7 @@ class Student(models.Model):
     state = models.CharField(max_length=20, default="")
     country = models.CharField(max_length=20)
     previous_school = models.CharField(max_length=200)
+    student_type = models.CharField(max_length=50, default="")
     total_siblings = models.IntegerField(default=0)
     number_of_children = models.IntegerField(default=0)
     parent_name = models.CharField(max_length=200)

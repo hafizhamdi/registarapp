@@ -183,7 +183,7 @@ def create_student_view(request):
         # Save to database
         Student.objects.create(
             full_name=full_name,
-            nric=nric,
+            id_number=nric,
             gender=gender,
             age=age,
             student_type=student_type
