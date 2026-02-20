@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from .models import Student, Bill
 from django.core.paginator import Paginator
+from datetime import datetime
+from django.utils import timezone
 # Create your views here.
 
 def index(request):
@@ -65,9 +67,16 @@ def signUpView(request):
 
 def dashboardView(request):
     # This data can later come from your Database (Models)
+    students = Student.objects.all()
+    fulltime_count = Student.objects.filter(student_type='Full-time').count()
+    parttime_count = Student.objects.filter(student_type='Part-time').count()
+
     context = {
-        'total_students': 1240,
+        'total_students': len(students),
+        'total_fulltime': fulltime_count,
+        'total_parttime': parttime_count,
         'page_title': 'Dashboard Overview',
+        
     }
     # Django looks in your app's 'templates/' folder automatically
     return render(request, 'registarapp/dashboard/dashboard.html', context)
@@ -82,7 +91,7 @@ def registrationView(request):
     query = request.GET.get('search')
     if query:
         student_list = student_list.filter(full_name__icontains=query) | \
-                       student_list.filter(nric__icontains=query)
+                       student_list.filter(id_number__icontains=query)
 
     # 3. Initialize Paginator (e.g., 10 students per page)
     paginator = Paginator(student_list, 10) 
@@ -178,15 +187,26 @@ def create_student_view(request):
         nric = request.POST.get('nric')
         gender = request.POST.get('gender')
         age = request.POST.get('age')
+        dob = request.POST.get('dob')
+        id_type = request.POST.get('id_type')
         student_type = request.POST.get('student_type')
+
+        formatted_date = datetime.strptime(dob, '%Y-%m-%d').date()
+
+        current_time = timezone.now()
+
+        created_date = current_time.strftime('%Y-%m-%d %H:%M:%S')
 
         # Save to database
         Student.objects.create(
             full_name=full_name,
             id_number=nric,
+            id_type=id_type,
             gender=gender,
             age=age,
-            student_type=student_type
+            dob=formatted_date,
+            student_type=student_type,
+            created_date=created_date,
         )
 
         # Add the success message

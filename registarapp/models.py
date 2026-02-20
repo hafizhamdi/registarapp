@@ -8,21 +8,21 @@ class Student(models.Model):
     full_name = models.CharField(max_length=200)
     id_number = models.CharField(max_length=50)
     id_type = models.CharField(max_length=10) # PASSPORT or MYKAD or MYKID
-    dob = models.DateField(max_length=12) # YYYY-MM-DD
+    dob = models.DateField(max_length=12, default="") # YYYY-MM-DD
     age = models.IntegerField(default=0)
     gender = models.CharField(max_length=10, default="")
-    address_line1 = models.CharField(max_length=200)
-    address_line2 = models.CharField(max_length=200)
-    postcode = models.CharField(max_length=10)
-    city = models.CharField(max_length=20)
+    address_line1 = models.CharField(max_length=200, default="")
+    address_line2 = models.CharField(max_length=200, default="")
+    postcode = models.CharField(max_length=10, default="")
+    city = models.CharField(max_length=20, default="")
     state = models.CharField(max_length=20, default="")
-    country = models.CharField(max_length=20)
-    previous_school = models.CharField(max_length=200)
+    country = models.CharField(max_length=20, default="")
+    previous_school = models.CharField(max_length=200, default="")
     student_type = models.CharField(max_length=50, default="")
     total_siblings = models.IntegerField(default=0)
     number_of_children = models.IntegerField(default=0)
-    parent_name = models.CharField(max_length=200)
-    parent_contact = models.CharField(max_length=50) # 012-3456789
+    parent_name = models.CharField(max_length=200, default="")
+    parent_contact = models.CharField(max_length=50, default="") # 012-3456789
     created_date = models.DateTimeField("date created") # YYYY-MM-DD HH:mm:ss
 
     def __str__(self):
