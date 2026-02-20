@@ -32,6 +32,9 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-gray-50 border-b border-gray-200">
+                    <th class="px-6 py-4 w-4">
+                        <input type="checkbox" id="select-all" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer">
+                    </th>   
                     <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">Invoice No.</th>
                     <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">Full Name</th>
                     <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">NRIC</th>
@@ -46,6 +49,9 @@
                 <!-- Example Row (Repeat this with Django loop) -->
                 {% for student in students %}
                 <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4">
+                        <input type="checkbox" name="selected_invoices" value="{{ student.id }}" class="row-checkbox w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer">
+                    </td>
                     <td class="px-6 py-4 text-xs text-gray-600">{{ forloop.counter }}</td>
                     <td class="px-6 py-4 text-xs font-medium text-gray-900">{{ student.full_name }}</td>
                     <td class="px-6 py-4 text-xs text-gray-600">{{ student.nric }}</td>
