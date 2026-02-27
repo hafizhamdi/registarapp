@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Think Ummah</title>
-    <link href="../static/css/output.css" rel="stylesheet">
+    {% load static %}
+    <link href="{% static 'registarapp/css/output.css' %}" rel="stylesheet">
     <!-- Using CDN as fallback to ensure styles load for testing -->
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-    <script defer src="../static/js/alpine.min.js"></script>
+    {% load static %} 
+    <script defer src="{% static 'registarapp/js/alpine.min.js' %}"></script>
     <style>
         [x-cloak] { display: none !important; }
     </style>

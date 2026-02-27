@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, SignUpForm, ForgotPasswodForm
@@ -11,6 +11,7 @@ from .models import Student, Bill
 from django.core.paginator import Paginator
 from datetime import datetime
 from django.utils import timezone
+from django.http import QueryDict
 # Create your views here.
 
 def index(request):
@@ -213,6 +214,74 @@ def create_student_view(request):
         messages.success(request, f"Student {request.POST.get('full_name')} registered successfully!")
         
         return redirect('registration_student') # Reload the list
+
+def edit_student_view(request, student_id):
+    # Fetch the existing student or return 404
+    student = get_object_or_404(Student, id=student_id)
+
+    if request.method == "PATCH":
+        # Since Django doesn't have request.PATCH, we parse the body
+        # This works for AJAX calls sending URL-encoded data or JSON
+        data = QueryDict(request.body)
+        
+        # 1. Extraction (Basic Info)
+        full_name = data.get('full_name')
+        nric = data.get('nric')
+        gender = data.get('gender')
+        age = data.get('age')
+        dob = data.get('dob')
+        id_type = data.get('id_type')
+        student_type = data.get('student_type')
+
+        # 2. Extraction (Detail Info)
+        address_line1 = data.get('address_line1')
+        address_line2 = data.get('address_line2')
+        postcode = data.get('postcode')
+        city = data.get('city')
+        state = data.get('state')
+        country = data.get('country')
+        previous_school = data.get('previous_school')
+        
+        # 3. Extraction (Family Info)
+        total_siblings = data.get('total_siblings')
+        number_of_children = data.get('number_of_children')
+        parent_name = data.get('parent_name')
+        parent_contact = data.get('parent_contact')
+        
+        # 4. Save to database
+        # We use .filter().update() for efficiency, or update attributes and .save()
+        Student.objects.filter(id=student_id).update(
+            full_name=full_name,
+            # id_number=nric,
+            id_type=id_type,
+            gender=gender,
+            age=age,
+            dob=dob, # Ensure this is in YYYY-MM-DD format
+            student_type=student_type,
+            address_line1=address_line1,
+            address_line2=address_line2,
+            postcode=postcode,
+            city=city,
+            state=state,
+            country=country,
+            previous_school=previous_school,
+            total_siblings=total_siblings,
+            number_of_children=number_of_children,
+            parent_name=parent_name,
+            parent_contact=parent_contact
+        )
+
+        # 5. Success Feedback
+        messages.success(request, f"Student {full_name} updated successfully!")
+        
+        
+        # Note: Redirects often convert PATCH to GET. 
+        # For AJAX, you might prefer returning a                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          JsonResponse.
+        return redirect('registarapp/student/edit_student.html')
+    context = {
+    
+    }
+    return render(request, 'registarapp/student/edit_student.html', context)
 
 class RegisterUserView(generics.CreateAPIView):
     User = get_user_model()
