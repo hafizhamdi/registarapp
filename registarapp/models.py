@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
-
 # Create your models here.
 class Student(models.Model):
     full_name = models.CharField(max_length=200)
@@ -30,14 +29,15 @@ class Student(models.Model):
 
 
 class Bill(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, blank=True)
     bill_type = models.CharField(max_length=100) # REGISTRATION_FEE or MONTHLY 
+    description = models.CharField(max_length=200, default="") # Anything
     bill_amount = models.DecimalField(max_digits=10, decimal_places=2)
     designated_month = models.CharField(max_length=10) # JANUARY, FEBRUARY and etc
     designated_year = models.CharField(max_length=10) # 2020, 2021, 2022 and etc
     payment_method = models.CharField(max_length=100) # QR or FPX or CASH or DEBIT
     payment_status = models.CharField(max_length=10) # PAID or PENDING or FAILED
-    payment_date = models.DateTimeField("date created") # YYYY-MM-DD HH:mm:ss
+    payment_date = models.DateTimeField("date created", null=True, blank=True) # YYYY-MM-DD HH:mm:ss
 
     def __str__(self):
         return self.student.full_name + "|" + self.bill_type + "|" + str(self.bill_amount)

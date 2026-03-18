@@ -12,6 +12,9 @@ urlpatterns = [
     path("dashboard", views.dashboardView, name="dashboard"),
     path("registration_student", views.registrationView, name="registration_student"),
     path("bill_payment", views.billPaymentView, name="bill_payment"),
+    path('bill_student/<int:student_id>', views.bill_student_view, name="bill_student"),
+    path("create_bill/<int:student_id>", views.create_bill_view, name="create_bill"),
+    path('create_bill_common', views.create_bill_common_view, name='create_bill_common'),
     path('create-student', views.create_student_view, name='create_student'),
     path('edit_student/<int:student_id>', views.edit_student_view, name='edit_student')
     

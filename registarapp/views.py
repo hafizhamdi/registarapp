@@ -12,6 +12,7 @@ from django.core.paginator import Paginator
 from datetime import datetime
 from django.utils import timezone
 from django.http import QueryDict
+from django.forms.models import model_to_dict
 # Create your views here.
 
 def index(request):
@@ -86,7 +87,7 @@ def registrationView(request):
     # This data can later come from your Database (Models)
 
     # 1. Get all students (ordered for consistent pagination)
-    student_list = Student.objects.all().order_by('full_name')
+    student_list = Student.objects.all().order_by('-created_date')
 
     # 2. Apply search filter if search bar is used
     query = request.GET.get('search')
@@ -130,12 +131,13 @@ def registrationView(request):
     # Django looks in your app's 'templates/' folder automatically
     return render(request, 'registarapp/student/registration_student.html', context)
 
-def billPaymentView(request):
+def bill_student_view(request, student_id):
     # This data can later come from your Database (Models)
 
-    # 1. Get all students (ordered for consistent pagination)
-    bill_list = Bill.objects.all().order_by('payment_date')
-
+    student = get_object_or_404(Student, id=student_id)
+    
+    bill_list = Bill.objects.filter(student=student).order_by('payment_date')
+   
     # 2. Apply search filter if search bar is used
     query = request.GET.get('search')
     if query:
@@ -180,7 +182,59 @@ def billPaymentView(request):
     }
     # Django looks in your app's 'templates/' folder automatically
     return render(request, 'registarapp/bill_payment/bill_payment.html', context)
+    
 
+def billPaymentView(request):
+    # This data can later come from your Database (Models)
+    bill_list = Bill.objects.select_related('student').order_by('-id')
+
+    # 2. Apply search filter if search bar is used
+    query = request.GET.get('search')
+    if query:
+        bill_list = bill_list.filter(designated_month__icontains=query) | \
+                       bill_list.filter(bill_type__icontains=query) | \
+                       bill_list.filter(description__icontains=query) | \
+                       bill_list.filter(student__full_name__icontains=query)
+
+    # 3. Initialize Paginator (e.g., 10 students per page)
+    paginator = Paginator(bill_list, 10) 
+    
+    # 4. Get current page number from request
+    page_number = request.GET.get('page')
+    
+    # 5. Get the specific page object
+    # get_page() handles invalid or out-of-range page numbers automatically
+    page_obj = paginator.get_page(page_number)
+
+    # context = {
+    #     'students': [
+    #         {
+    #             'full_name' : 'ABU KASIM',
+    #             'nric': '900129016139',
+    #             'amount': 200.0,
+    #             'description': 'YURAN TAHUNAN',
+    #             'payment_at': '2025-02-18 02:11 AM',
+    #             'payment_type': 'Cash'
+    #         },
+    #         {
+    #             'full_name' : 'SALEH MAT YOM',
+    #             'nric': '900129016139',
+    #             'amount': 200.0,
+    #             'description': 'YURAN TAHUNAN',
+    #             'payment_at': '2025-02-18 02:11 AM',
+    #             'payment_type': 'FPX'
+    #         },
+    #     ],
+    #     'page_title': 'Student Registration',
+    # }
+
+    context = {
+        'page_obj': page_obj,
+        'bills': page_obj,  # Passing page_obj as 'students' for the loop
+    }
+    # Django looks in your app's 'templates/' folder automatically
+    return render(request, 'registarapp/bill_payment/bill_payment.html', context)
+    
 def create_student_view(request):
     if request.method == "POST":
         # Capture form data
@@ -196,8 +250,6 @@ def create_student_view(request):
 
         current_time = timezone.now()
 
-        created_date = current_time.strftime('%Y-%m-%d %H:%M:%S')
-
         # Save to database
         Student.objects.create(
             full_name=full_name,
@@ -207,7 +259,7 @@ def create_student_view(request):
             age=age,
             dob=formatted_date,
             student_type=student_type,
-            created_date=created_date,
+            created_date=current_time,
         )
 
         # Add the success message
@@ -219,7 +271,8 @@ def edit_student_view(request, student_id):
     # Fetch the existing student or return 404
     student = get_object_or_404(Student, id=student_id)
 
-    if request.method == "PATCH":
+
+    if request.method == "POST":
         # Since Django doesn't have request.PATCH, we parse the body
         # This works for AJAX calls sending URL-encoded data or JSON
         data = QueryDict(request.body)
@@ -274,14 +327,98 @@ def edit_student_view(request, student_id):
         # 5. Success Feedback
         messages.success(request, f"Student {full_name} updated successfully!")
         
-        
+        student = get_object_or_404(Student, id=student_id)
         # Note: Redirects often convert PATCH to GET. 
         # For AJAX, you might prefer returning a                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          JsonResponse.
-        return redirect('registarapp/student/edit_student.html')
-    context = {
-    
-    }
-    return render(request, 'registarapp/student/edit_student.html', context)
+        return render(request,'registarapp/student/edit_student.html',{'student': model_to_dict(student)} )
+
+    return render(request, 'registarapp/student/edit_student.html', {'student': model_to_dict(student)})
+
+def create_bill_view(request, student_id):
+    # Fetch the existing student or return 404
+    student = get_object_or_404(Student, id=student_id)
+
+    if request.method == "POST":
+        # Capture form data
+        amount = request.POST.get('amount')
+        payment_method = request.POST.get('payment_method')
+        month = request.POST.get('month')
+        year = request.POST.get('year')
+        payment_status = request.POST.get('payment_status')
+        current_time = timezone.now()
+        # created_date = current_time.strftime('%Y-%m-%d %H:%M:%S')
+        payment_date = None
+        if payment_status == "Paid":
+            payment_date = current_time
+
+        # Save to database
+        Bill.objects.create(
+            student=student,
+            bill_type=bill_type,
+            bill_amount=amount,
+            designated_month=month,
+            designated_year=year,
+            payment_method=payment_method,
+            payment_status=payment_status,
+            payment_date=payment_date,
+        )
+
+        # Add the success message
+        messages.success(request, f"Student {student.full_name}'s bill added successfully!")
+        
+        context = {}
+        
+    return render(request, 'registarapp/bill_payment/bill_payment.html', context)
+
+
+def create_bill_common_view(request):
+    # Fetch the existing student or return 404
+    # student = get_object_or_404(Student, id=student_id)
+
+    if request.method == "POST":
+        # Capture form data
+        amount = request.POST.get('amount')
+        description = request.POST.get('description')
+        name = request.POST.get('name')
+        bill_type = request.POST.get('bill_type')
+        payment_method = request.POST.get('payment_method')
+        month = request.POST.get('month')
+        year = request.POST.get('year')
+        payment_status = request.POST.get('payment_status')
+        current_time = timezone.now()
+        # created_date = current_time.strftime('%Y-%m-%d %H:%M:%S')
+        payment_date = None
+        if payment_status == "Paid":
+            payment_date = current_time
+
+        student_list = Student.objects.all().order_by('-created_date')
+
+        if name:
+            # Filter by the provided name
+            student_list = Student.objects.filter(full_name__icontains=name)
+        else:
+            # Explicitly set to an empty QuerySet if name is None or ""
+            student_list = Student.objects.none()
+            
+        # Save to database
+        new_bill = Bill.objects.create(
+            student=student_list.first(),
+            description=description,
+            bill_type=bill_type,
+            bill_amount=amount,
+            designated_month=month,
+            designated_year=year,
+            payment_method=payment_method,
+            payment_status=payment_status,
+            payment_date=payment_date
+        )
+
+        # Add the success message
+        messages.success(request, f"New Bill {new_bill.id} created")
+ 
+    return redirect('bill_payment');
+        
+    # return render(request, 'registarapp/bill_payment/bill_payment.html', context)
 
 class RegisterUserView(generics.CreateAPIView):
     User = get_user_model()

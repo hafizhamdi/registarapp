@@ -10,7 +10,7 @@
         </button>
     </div>
     <div>
-        <form method="GET" action="{% url 'bill_payment' %}" class="relative w-full max-w-md">
+        <form method="GET" action="{% url 'registration_student' %}" class="relative w-full max-w-md">
             <!-- Icon Container -->
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org">
@@ -21,7 +21,7 @@
             <!-- Input Field -->
             <input type="text" 
                 name="search" 
-                placeholder="Search Purpose or Name ..." 
+                placeholder="Search students by name or NRIC..." 
                 class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
                 value="{{ request.GET.search }}">
         </form>
@@ -37,27 +37,35 @@
                         <input type="checkbox" id="select-all" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer">
                     </th>   
                     <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">Invoice No.</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">Description</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">Full Name</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">NRIC</th>
                     <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">Amount (RM)</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">Payment Type</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">Payment Status</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">Description</th>
                     <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">Payment At</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase">Payment Type</th>
                     <th class="px-6 py-4 text-xs font-semibold text-gray-600 uppercase text-center">Actions</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
                 <!-- Example Row (Repeat this with Django loop) -->
-                {% for bill in bills %}
+                {% for student in students %}
                 <tr class="hover:bg-gray-50 transition-colors">
                     <td class="px-6 py-4">
-                        <input type="checkbox" name="selected_invoices" value="{{ bill.id }}" class="row-checkbox w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer">
+                        <input type="checkbox" name="selected_invoices" value="{{ student.id }}" class="row-checkbox w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer">
                     </td>
-                    <td class="px-6 py-4 text-xs text-gray-600">{{ bill.id }}</td>
-                    <td class="px-6 py-4 text-xs text-gray-600">{{ bill.bill_type }} {{bill.designated_month}} {{bill.designated_year}} - {{bill.student.full_name}} {{bill.description}}</td>
-                    <td class="px-6 py-4 text-xs text-gray-600">{{ bill.bill_amount }}</td>
-                    <td class="px-6 py-4 text-xs text-gray-600">{{ bill.payment_method }}</td>
-                    <td class="px-6 py-4 text-xs text-gray-600">{{ bill.payment_status }}</td>
-                    <td class="px-6 py-4 text-xs text-gray-600">{{ bill.payment_date|date:"d-m-Y H:i:s" }}</td>
+                    <td class="px-6 py-4 text-xs text-gray-600">{{ forloop.counter }}</td>
+                    <td class="px-6 py-4 text-xs font-medium text-gray-900">{{ student.full_name }}</td>
+                    <td class="px-6 py-4 text-xs text-gray-600">{{ student.nric }}</td>
+                    <td class="px-6 py-4 text-xs text-gray-600">{{ student.amount }}</td>
+                    <td class="px-6 py-4 text-xs text-gray-600">{{ student.description }}</td>
+                    <td class="px-6 py-4 text-xs text-gray-600">{{ student.payment_at }}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 text-xs font-medium rounded-full 
+                            {% if student.type == 'Full-time' %} bg-green-100 text-green-700 
+                            {% else %} bg-blue-100 text-blue-700 {% endif %}">
+                            {{ student.payment_type }}
+                        </span>
+                    </td>
                     <td class="px-6 py-4">
                         <div class="flex justify-center items-center gap-2">
                             <!-- View Button -->
@@ -71,7 +79,7 @@
                             <!-- Go to Bill Button -->
                             <a href="#" class="ml-2 flex items-center gap-1 px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded border border-emerald-200 hover:bg-emerald-100 transition">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                                Receipt
+                                Generate Receipt
                             </a>
                         </div>
                     </td>
@@ -112,8 +120,8 @@
             x-data="{
                 current: 0,
                 images: [
-                    '{% static "registarapp/img/image_43a9f84c.png" %}',
-                    '{% static 'registarapp/img/image_905d67e.png' %}',
+                    '{% static "registarapp/img/main_background.jpg" %}',
+                    '{% static 'registarapp/img/image_1a036db12.png' %}',
                     '{% static 'registarapp/img/image_1_1773172295341.jpg' %}'
                 ],
                 start() {
@@ -180,7 +188,7 @@
                     <button @click="open = false" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
                 </div>
 
-                <form action="{% url 'create_bill_common' %}" method="POST" class="p-6 space-y-4">
+                <form action="{% url 'create_bill' student.id %}" method="POST" class="p-6 space-y-4">
                     {% csrf_token %}
                     <div class="grid grid-cols-2 gap-4 text-sm">
                         <div class="col-span-2">
@@ -190,21 +198,11 @@
                                 <option>Monthly</option>
                                 <option>Infaq</option>
                                 <option>Waqaf</option>
-                                <option>Other</option>
-                                
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Student name (optional)</label>
-                            <input type="text" name="name"  class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none" >
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Description (optional)</label>
-                            <input type="text" name="description"  class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none" >
-                        </div>
-                        <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Month</label>
-                            <select name="month" class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                            <select name="designated_month" class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                                 <option>Jan</option>
                                 <option>Feb</option>
                                 <option>Mar</option>

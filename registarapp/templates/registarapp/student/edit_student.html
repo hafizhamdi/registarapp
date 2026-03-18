@@ -5,7 +5,7 @@ Portal{% endblock %} {% block content %}
   <!-- FIXED: Added @click to the main button -->
 </div>
 <div>
-  <form action="{% url 'create_student' %}" method="POST" class="p-6 space-y-4">
+  <form action="{% url 'edit_student' student.id %}" method="POST" class="p-6 space-y-4">
     {% csrf_token %}
     <div class="grid grid-cols-2 gap-4 text-sm">
       <div class="col-span-2">
@@ -15,6 +15,7 @@ Portal{% endblock %} {% block content %}
         <input
           type="text"
           name="full_name"
+          value="{{student.full_name}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -26,6 +27,7 @@ Portal{% endblock %} {% block content %}
         <input
           type="text"
           name="nric"
+          value="{{student.id_number}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -36,6 +38,7 @@ Portal{% endblock %} {% block content %}
         >
         <select
           name="id_type"
+          value="{{student.id_type}}"
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         >
           <option>MyKad</option>
@@ -49,6 +52,7 @@ Portal{% endblock %} {% block content %}
         <input
           type="date"
           name="dob"
+          value="{{student.dob|date:'Y-m-d'}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -59,6 +63,7 @@ Portal{% endblock %} {% block content %}
         >
         <select
           name="gender"
+          value="{{student.gender}}"
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         >
           <option>Male</option>
@@ -72,6 +77,7 @@ Portal{% endblock %} {% block content %}
         <input
           type="number"
           name="age"
+          value="{{student.age}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -82,6 +88,7 @@ Portal{% endblock %} {% block content %}
         >
         <select
           name="student_type"
+          value="{{student.student_type}}"
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         >
           <option>Full-time</option>
@@ -94,7 +101,8 @@ Portal{% endblock %} {% block content %}
         >
         <input
           type="text"
-          name="addrline1"
+          name="address_line1"
+          value="{{student.address_line1}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -105,7 +113,8 @@ Portal{% endblock %} {% block content %}
         >
         <input
           type="text"
-          name="addrline2"
+          name="address_line2"
+          value="{{student.address_line2}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -117,6 +126,7 @@ Portal{% endblock %} {% block content %}
         <input
           type="text"
           name="postcode"
+          value="{{student.postcode}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -128,6 +138,7 @@ Portal{% endblock %} {% block content %}
         <input
           type="text"
           name="city"
+          value="{{student.city}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -139,6 +150,7 @@ Portal{% endblock %} {% block content %}
         <input
           type="text"
           name="state"
+          value="{{student.state}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -150,6 +162,7 @@ Portal{% endblock %} {% block content %}
         <input
           type="text"
           name="country"
+          value="{{student.country}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -160,7 +173,8 @@ Portal{% endblock %} {% block content %}
         >
         <input
           type="text"
-          name="prevSchool"
+          name="previous_school"
+          value="{{student.previous_school}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -171,7 +185,8 @@ Portal{% endblock %} {% block content %}
         >
         <input
           type="number"
-          name="noOfSiblings"
+          name="total_siblings"
+          value="{{student.total_siblings}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -182,7 +197,8 @@ Portal{% endblock %} {% block content %}
         >
         <input
           type="number"
-          name="noInSiblings"
+          name="number_of_children"
+          value="{{student.number_of_children}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -193,7 +209,8 @@ Portal{% endblock %} {% block content %}
         >
         <input
           type="text"
-          name="parentName"
+          name="parent_name"
+          value="{{student.parent_name}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
@@ -203,7 +220,7 @@ Portal{% endblock %} {% block content %}
           >Relationship</label
         >
         <select
-          name="student_type"
+          name="relationship"
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         >
           <option>Close relative</option>
@@ -217,20 +234,21 @@ Portal{% endblock %} {% block content %}
         >
         <input
           type="number"
-          name="parentContact"
+          name="parent_contact"
+          value="{{student.parent_contact}}"
           required
           class="block w-full pl-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
         />
       </div>
     </div>
     <div class="flex justify-end gap-3 mt-6">
-      <button
-        type="button"
-        @click="open = false"
-        class="px-4 py-2 text-gray-500"
-      >
+      <a
+        href="{% url 'registration_student' %}"
+        class="px-4 py-2 text-gray-500 hover:text-gray-700 inline-block text-sm"
+        
+        >
         Cancel
-      </button>
+        </a>
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
         Save
       </button>
