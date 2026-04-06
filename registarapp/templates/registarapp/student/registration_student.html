@@ -42,7 +42,7 @@
                     <td class="px-6 py-4 text-xs text-gray-600">{{ forloop.counter }}</td>
                     <td class="px-6 py-4 text-xs font-medium text-gray-900">{{ student.full_name }}</td>
                     <td class="px-6 py-4 text-xs text-gray-600">{{ student.id_number }}</td>
-                    <td class="px-6 py-4 text-xs text-gray-600">{{ student.gender }}</td>
+                    <td class="px-6 py-4 text-xs text-gray-600">{{ student.gender|slice:":1"  }}</td>
                     <td class="px-6 py-4 text-xs text-gray-600">{{ student.age }}</td>
                     <td class="px-6 py-4">
                         <span class="px-2 py-1 text-xs font-medium rounded-full 

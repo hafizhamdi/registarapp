@@ -426,3 +426,25 @@ class RegisterUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+def receipt_view(request, bill_id):
+    bill = get_object_or_404(Bill, id=bill_id)
+    context = {
+        "logo_url": "/static/img/logo.png",
+        "company_name": "My Company Sdn Bhd",
+        "company_address": "Kuala Lumpur, Malaysia",
+        "customer_name": "John Doe",
+        "customer_email": "john@email.com",
+        "customer_phone": "0123456789",
+        "receipt_no": "RCPT-0001",
+        "date": "2026-03-29",
+        "time": "14:30",
+        "payment_method": "Online Transfer",
+        "items": [
+            {"name": "Course A", "description": "Django Training", "quantity": 1, "price": 100, "total": 100},
+            {"name": "Course B", "description": "API Training", "quantity": 2, "price": 50, "total": 100},
+        ],
+        "grand_total": 200,
+        "description": "Thank you for your payment."
+    }
+    return redirect('receipt', context)
+

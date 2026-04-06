@@ -16,6 +16,7 @@ urlpatterns = [
     path("create_bill/<int:student_id>", views.create_bill_view, name="create_bill"),
     path('create_bill_common', views.create_bill_common_view, name='create_bill_common'),
     path('create-student', views.create_student_view, name='create_student'),
-    path('edit_student/<int:student_id>', views.edit_student_view, name='edit_student')
+    path('edit_student/<int:student_id>', views.edit_student_view, name='edit_student'),
+    path('receipt/<int:bill_id>', views.receipt_view, name='receipt')
     
 ]                                                                                                                                                                                                                       
