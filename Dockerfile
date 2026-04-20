@@ -34,14 +34,14 @@ RUN apt-get update && apt-get install -y \
 # Copy installed packages from builder
 COPY --from=builder /install /usr/local
 
-COPY entrypoint.sh /app/entrypoint.sh
+# Copy project FIRST
+COPY . .
+
+# THEN fix permissions
 RUN chmod +x /app/entrypoint.sh
 
 # Create non-root user
 RUN useradd -m appuser
-
-# Copy project
-COPY . .
 
 # Set ownership
 RUN chown -R appuser:appuser /app
@@ -51,7 +51,6 @@ USER appuser
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
-# Expose port
 EXPOSE 8000
 
 CMD ["/app/entrypoint.sh"]
