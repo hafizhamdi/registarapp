@@ -37,14 +37,14 @@ COPY --from=builder /install /usr/local
 # Copy project FIRST
 COPY . .
 
-# THEN fix permissions
-RUN chmod +x /app/entrypoint.sh
-
 # Create non-root user
 RUN useradd -m appuser
 
 # Set ownership
 RUN chown -R appuser:appuser /app
+
+# THEN fix permissions
+RUN chmod +x /app/entrypoint.sh
 
 USER appuser
 
