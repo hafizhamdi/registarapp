@@ -19,17 +19,5 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql
 
-  reverse-proxy:
-    image: traefik:v3.1
-    command:
-      - "--api.insecure=true" # Enables dashboard
-      - "--providers.docker=true" # Enables Docker provider
-      - "--entrypoints.web.address=:80" # Defines HTTP port
-    ports:
-      - "80:80" # HTTP
-      - "8080:8080" # Dashboard
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro # Socket access
-
 volumes:
   postgres_data:
