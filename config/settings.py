@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-%fpackcg7ek67bo^puk7+tn$l3bi+i!p)upvtu@(y9bsvp7i7m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['registarapp.myinterlink.cloud', '46.202.166.88']
+ALLOWED_HOSTS = ['registar.myinterlink.cloud']
 
 
 # Application definition
