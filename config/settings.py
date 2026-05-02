@@ -30,6 +30,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['registar.myinterlink.cloud']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://registar.myinterlink.cloud',
+]
 
 # Application definition
 
